@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/courseagent/db" VERSION="20260416" COMMENT="XMLDB file for local_courseagent plugin"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="courseagent_sessions" COMMENT="Stores AI course generation sessions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who generated the course"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle course ID after publication"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Session status: draft, published, failed"/>
+        <FIELD NAME="course_json" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Complete course JSON data"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time of creation"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time of last modification"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="courseid" UNIQUE="false" FIELDS="courseid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="courseagent_providers" COMMENT="Stores AI provider configurations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Provider display name"/>
+        <FIELD NAME="apikey" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Encrypted API key"/>
+        <FIELD NAME="baseurl" TYPE="char" LENGTH="512" NOTNULL="true" SEQUENCE="false" COMMENT="Base URL for API requests"/>
+        <FIELD NAME="endpoint" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="API endpoint path"/>
+        <FIELD NAME="api_format" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="openai" SEQUENCE="false" COMMENT="API request format: openai or gemini"/>
+        <FIELD NAME="models" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array of available models"/>
+        <FIELD NAME="isdefault" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Is this the default provider?"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Is this provider enabled?"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Sort order for display"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time of creation"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Time of last modification"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="isdefault" UNIQUE="false" FIELDS="isdefault"/>
+        <INDEX NAME="enabled" UNIQUE="false" FIELDS="enabled"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
