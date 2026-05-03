@@ -126,9 +126,9 @@ $isediting   = ($editid > 0);
 $isadding    = ($action === 'add');
 $form        = null;  // Initialize to avoid undefined variable warning.
 
-// Check whether form was submitted; Moodle forms send a _qf__<formclass> marker in POST.
-// This must be detected before deciding whether to create the form object.
-// get_data() requires the form object to exist.
+// Check if form was submitted - Moodle forms send a _qf__<formclass> marker in POST.
+// This must be detected BEFORE we decide whether to create the form object,
+// because get_data() requires the form object to exist.
 $qfmarker = '_qf__local_courseagent_form_provider_form';
 $formsubmitted = optional_param($qfmarker, null, PARAM_RAW) !== null;
 
