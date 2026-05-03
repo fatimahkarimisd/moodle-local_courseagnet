@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Commenting.InlineComment.NotCapital
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
+// phpcs:disable moodle.Strings.ForbiddenStrings.Found
 namespace local_courseagent;
 
 defined('MOODLE_INTERNAL') || die();

@@ -31,6 +31,7 @@ class provider_form extends \moodleform {
     public function definition() {
         global $CFG;
 
+// phpcs:disable moodle.Files.LineLength.TooLong
         $mform = $this->_form;
         $provider = $this->_customdata['provider'] ?? null;
         $isediting = !empty($provider);

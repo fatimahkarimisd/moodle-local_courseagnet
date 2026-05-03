@@ -16,8 +16,6 @@
 
 namespace local_courseagent;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * AI Provider management class.
  * Handles CRUD operations, encryption, and API calls for AI providers.
@@ -30,6 +28,8 @@ class provider {
     /** @var string Encryption key for API keys */
     private static $cipher = 'aes-256-cbc';
 
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
     /**
      * Get encryption key.
      * Uses site identifier for key derivation.

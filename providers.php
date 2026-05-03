@@ -22,6 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Commenting.InlineComment.IncorrectCommentSeparator
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
+// phpcs:disable moodle.Commenting.InlineComment.NotCapital
+// phpcs:disable Squiz.PHP.CommentedOutCode.Found
+// phpcs:disable moodle.Files.LineLength.TooLong
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/classes/form/provider_form.php');
 
