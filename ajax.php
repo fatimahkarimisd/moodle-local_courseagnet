@@ -1,7 +1,9 @@
 <?php
-// This file is part of Course Agent - AI Course Creator Plugin for Moodle
+// This file is part of Course Agent - AI Course Creator Plugin for Moodle.
 
 /**
+ * AJAX endpoint for local_courseagent actions.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -73,7 +75,7 @@ try {
 
             // Generate course using AI.
             $api = new api();
-            $course_data = $api->generate_course_outline(
+            $coursedata = $api->generate_course_outline(
                 $topic, $level, $numsections,
                 $includequiz, $includeassignment,
                 $providerid > 0 ? $providerid : null,
@@ -88,36 +90,36 @@ try {
 
             // Store in session for preview page.
             global $SESSION;
-            $SESSION->courseagent_preview = $course_data;
+            $SESSION->courseagent_preview = $coursedata;
 
             courseagent_write_progress(3, 100, 'Course generated successfully!');
 
             echo json_encode([
                 'success'       => true,
-                'data'          => $course_data,
-                'used_provider' => $course_data->_used_provider_name ?? null,
-                'used_model'    => $course_data->_used_model ?? null,
-                'fallback_log'  => $course_data->_fallback_log ?? [],
+                'data'          => $coursedata,
+                'used_provider' => $coursedata->_used_provider_name ?? null,
+                'used_model'    => $coursedata->_used_model ?? null,
+                'fallback_log'  => $coursedata->_fallback_log ?? [],
             ]);
             break;
 
         case 'publish':
             // Publish course to Moodle.
-            $json_data = file_get_contents('php://input');
-            $course_data = json_decode($json_data);
+            $jsondata = file_get_contents('php://input');
+            $coursedata = json_decode($jsondata);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new Exception(get_string('error_invalid_json', 'local_courseagent'));
             }
 
             $api = new api();
-            $course_id = $api->publish_course($course_data);
-            $course_url = new moodle_url('/course/view.php', ['id' => $course_id]);
+            $courseid = $api->publish_course($coursedata);
+            $courseurl = new moodle_url('/course/view.php', ['id' => $courseid]);
 
             echo json_encode([
                 'success' => true,
-                'course_id' => $course_id,
-                'course_url' => $course_url->out(false)
+                'course_id' => $courseid,
+                'course_url' => $courseurl->out(false),
             ]);
             break;
 
@@ -133,7 +135,7 @@ try {
                 'httpcode' => $result->httpcode,
                 'ai_response' => $result->ai_response ?? null,
                 'response' => $result->response,
-                'debug' => $result->debug ?? null
+                'debug' => $result->debug ?? null,
             ]);
             break;
 
@@ -153,7 +155,7 @@ try {
                 'httpcode' => $result->httpcode,
                 'ai_response' => $result->ai_response ?? null,
                 'response' => $result->response,
-                'debug' => $result->debug ?? null
+                'debug' => $result->debug ?? null,
             ]);
             break;
 
@@ -193,7 +195,7 @@ try {
 
             echo json_encode([
                 'success' => true,
-                'models' => $models
+                'models' => $models,
             ]);
             break;
 
@@ -223,7 +225,7 @@ try {
             echo json_encode([
                 'success'  => true,
                 'text'     => $text,
-                'charcount'=> mb_strlen($text),
+                'charcount' => mb_strlen($text),
                 'filename' => $filename,
             ]);
             break;
@@ -236,6 +238,6 @@ try {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage()
+        'error' => $e->getMessage(),
     ]);
 }

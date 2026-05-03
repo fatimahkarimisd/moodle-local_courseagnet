@@ -1,7 +1,9 @@
 <?php
-// This file is part of Course Agent - AI Course Creator Plugin for Moodle
+// This file is part of Course Agent - AI Course Creator Plugin for Moodle.
 
 /**
+ * Version metadata for local_courseagent.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
