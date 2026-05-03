@@ -22,7 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 // phpcs:disable moodle.Commenting.MissingDocblock.File
-// phpcs:disable moodle.Files.LineLength.TooLong
 
 require_once(__DIR__ . '/../../config.php');
 
@@ -51,7 +50,7 @@ echo $OUTPUT->header();
 
 <div id="courseagent-preview-app">
 
-    <?php if (empty($previewdata)) { ?>
+    <?php if (empty($previewdata)) : ?>
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
             <?php echo get_string('no_preview_data', 'local_courseagent'); ?>
@@ -59,7 +58,7 @@ echo $OUTPUT->header();
         </div>
     <?php } ?>
 
-    <?php if (!empty($previewdata)) { ?>
+    <?php if (!empty($previewdata)) : ?>
         <script type="application/json" id="ca-preview-data"><?php echo json_encode($previewdata); ?></script>
 
         <!-- Top Bar -->
