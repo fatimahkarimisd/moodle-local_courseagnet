@@ -71,12 +71,12 @@ if (empty($sessions)) {
         $status = ucfirst($session->status);
 
         // Status badge styling.
-        $statusclass = $session->status === 'published' ? 'success' :
+        $status_class = $session->status === 'published' ? 'success' :
                        ($session->status === 'failed' ? 'danger' : 'secondary');
-        $statusbadge = html_writer::tag(
+        $status_badge = html_writer::tag(
             'span',
             $status,
-            ['class' => "badge badge-{$statusclass}"]
+            ['class' => "badge badge-{$status_class}"]
         );
 
         // Action links.
@@ -89,7 +89,7 @@ if (empty($sessions)) {
             );
         }
 
-        $table->data[] = [$date, $title, $statusbadge, $actions];
+        $table->data[] = [$date, $title, $status_badge, $actions];
     }
 
     echo html_writer::table($table);

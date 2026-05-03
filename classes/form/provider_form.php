@@ -28,9 +28,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider_form extends \moodleform {
-    /**
-     * Defines the provider configuration form fields.
-     */
     public function definition() {
         global $CFG;
 
