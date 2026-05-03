@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * AI Provider management page.
@@ -121,8 +134,8 @@ $form        = null;  // Initialize to avoid undefined variable warning.
 // Check if form was submitted - Moodle forms send a _qf__<formclass> marker in POST.
 // This must be detected BEFORE we decide whether to create the form object,
 // because get_data() requires the form object to exist.
-$qf_marker = '_qf__local_courseagent_form_provider_form';
-$form_submitted = optional_param($qf_marker, null, PARAM_RAW) !== null;
+$qfmarker = '_qf__local_courseagent_form_provider_form';
+$formsubmitted = optional_param($qfmarker, null, PARAM_RAW) !== null;
 
 if ($isediting) {
     $rec = provider::get($editid);
@@ -139,7 +152,7 @@ if ($isediting) {
             'models_json' => $rec->models,
         ]);
     }
-} else if ($isadding || $form_submitted) {
+} else if ($isadding || $formsubmitted) {
     // Create form for both "add" display AND form submission processing.
     $form = new provider_form(new moodle_url('/local/courseagent/providers.php'), ['provider' => null]);
 }
@@ -154,8 +167,8 @@ if ($form) {
         // echo $OUTPUT->header(); echo '<pre>'; print_r($data); echo '</pre>'; echo $OUTPUT->footer(); exit;
 
         // Parse models from the hidden JSON field (populated by JS widget).
-        $modelsRaw = $data->models_json ?? '[]';
-        $models    = json_decode($modelsRaw, true);
+        $modelsraw = $data->models_json ?? '[]';
+        $models    = json_decode($modelsraw, true);
         if (!is_array($models)) {
             $models = [];
         }
@@ -284,7 +297,8 @@ if (empty($providers)) {
         // Status badges.
         $status = '';
         if ($p->isdefault) {
-            $status .= html_writer::tag('span',
+            $status .= html_writer::tag(
+                'span',
                 html_writer::tag('i', '', ['class' => 'fa fa-star mr-1']) . get_string('provider_default', 'local_courseagent'),
                 ['class' => 'badge badge-primary mr-1']
             );
@@ -304,7 +318,8 @@ if (empty($providers)) {
         );
 
         // Test connection.
-        $actions[] = html_writer::tag('a',
+        $actions[] = html_writer::tag(
+            'a',
             $OUTPUT->pix_icon('i/valid', get_string('provider_test', 'local_courseagent')),
             [
                 'href'            => 'javascript:void(0)',

@@ -27,7 +27,6 @@ use core\hook\navigation\primary_extend;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class navigation {
-
     /**
      * Add Course Agent link to the primary top navbar (Moodle 5.x).
      *
