@@ -200,7 +200,8 @@ echo $OUTPUT->header();
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-pencil-square-o"></i>
                                         </span>
                                     </div>
@@ -214,13 +215,14 @@ echo $OUTPUT->header();
                                     <label class="custom-control-label" for="include-assignment"></label>
                                 </div>
                             </div>
-                            <?php endif; ?>
+                            <?php } ?>
 
                             <!-- Use Emojis -->
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-smile-o"></i>
                                         </span>
                                     </div>
@@ -239,7 +241,8 @@ echo $OUTPUT->header();
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-picture-o"></i>
                                         </span>
                                     </div>
@@ -268,7 +271,7 @@ echo $OUTPUT->header();
                                             <?php echo format_string($p->name);
                                                   echo $p->isdefault ? ' (' . get_string('provider_default', 'local_courseagent') . ')' : ''; ?>
                                         </option>
-                                    <?php endforeach; ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <!-- AI Model -->
@@ -305,7 +308,8 @@ echo $OUTPUT->header();
                     </p>
                     <div class="list-group list-group-flush">
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-list-ol text-primary"></i>
                             </span>
                             <div>
@@ -314,7 +318,8 @@ echo $OUTPUT->header();
                             </div>
                         </div>
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-file-text-o text-primary"></i>
                             </span>
                             <div>
@@ -323,7 +328,8 @@ echo $OUTPUT->header();
                             </div>
                         </div>
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-check-circle text-primary"></i>
                             </span>
                             <div>

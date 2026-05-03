@@ -55,7 +55,7 @@ echo $OUTPUT->header();
             <?php echo get_string('no_preview_data', 'local_courseagent'); ?>
             <a href="<?php echo new moodle_url('/local/courseagent/index.php'); ?>"><?php echo get_string('create_course', 'local_courseagent'); ?></a>.
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <?php if (!empty($previewdata)) : ?>
         <script type="application/json" id="ca-preview-data"><?php echo json_encode($previewdata); ?></script>
@@ -122,7 +122,7 @@ echo $OUTPUT->header();
         </div>
 
         <div id="ca-provider-info" style="display:none;"></div>
-    <?php endif; ?>
+    <?php } ?>
 </div>
 
 <?php echo $OUTPUT->footer(); ?>
