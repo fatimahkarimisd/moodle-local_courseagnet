@@ -199,7 +199,7 @@ echo $OUTPUT->header();
                                 </div>
                             </div>
 
-                            <?php if ($enableassignments) { ?>
+                            <?php if ($enableassignments) : ?>
                             <!-- Include Assignments -->
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
@@ -269,7 +269,7 @@ echo $OUTPUT->header();
                             <div class="form-group col-md-6">
                                 <label for="ai-provider" class="font-weight-bold">AI Provider</label>
                                 <select id="ai-provider" class="custom-select">
-                                    <?php foreach ($providers as $p) { ?>
+                                    <?php foreach ($providers as $p) : ?>
                                         <option value="<?php echo $p->id; ?>"
                                             <?php echo $p->isdefault ? 'selected' : ''; ?>>
                                             <?php echo format_string($p->name);
