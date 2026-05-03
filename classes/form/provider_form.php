@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_courseagent\form;
 
@@ -15,7 +28,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider_form extends \moodleform {
-
     public function definition() {
         global $CFG;
 
@@ -39,7 +51,10 @@ class provider_form extends \moodleform {
 
         // When editing, show note about leaving blank to keep existing key.
         if ($isediting && !empty($provider->apikey)) {
-            $mform->addElement('static', 'apikey_note', '',
+            $mform->addElement(
+                'static',
+                'apikey_note',
+                '',
                 get_string('provider_apikey_note', 'local_courseagent')
             );
         }
@@ -71,7 +86,10 @@ class provider_form extends \moodleform {
         $mform->addElement('hidden', 'models_json', '[]');
         $mform->setType('models_json', PARAM_RAW);
 
-        $mform->addElement('static', 'models_widget', get_string('provider_models', 'local_courseagent'),
+        $mform->addElement(
+            'static',
+            'models_widget',
+            get_string('provider_models', 'local_courseagent'),
             $this->render_models_widget($provider)
         );
         $mform->addHelpButton('models_widget', 'provider_models', 'local_courseagent');
@@ -96,7 +114,10 @@ class provider_form extends \moodleform {
         $mform->setType('id', PARAM_INT);
 
         // Test connection button - placed before the action buttons.
-        $mform->addElement('static', 'test_widget', '',
+        $mform->addElement(
+            'static',
+            'test_widget',
+            '',
             $this->render_test_button()
         );
 

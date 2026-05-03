@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Course Agent plugin upgrade steps.
@@ -28,24 +41,24 @@ function xmldb_local_courseagent_upgrade($oldversion) {
         $table = new xmldb_table('courseagent_providers');
 
         // Add fields.
-        $table->add_field('id',           XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        $table->add_field('name',         XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('apikey',       XMLDB_TYPE_TEXT,    null,  null, XMLDB_NOTNULL, null, null);
-        $table->add_field('baseurl',      XMLDB_TYPE_CHAR,    '512', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('endpoint',     XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('models',       XMLDB_TYPE_TEXT,    null,  null, null,          null, null);
-        $table->add_field('isdefault',    XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('enabled',      XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '1');
-        $table->add_field('sortorder',    XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('timecreated',  XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
-        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('apikey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('baseurl', XMLDB_TYPE_CHAR, '512', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('endpoint', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('models', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('isdefault', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
         // Add primary key.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Add indexes.
         $table->add_index('isdefault', XMLDB_INDEX_NOTUNIQUE, ['isdefault']);
-        $table->add_index('enabled',   XMLDB_INDEX_NOTUNIQUE, ['enabled']);
+        $table->add_index('enabled', XMLDB_INDEX_NOTUNIQUE, ['enabled']);
 
         // Only create if it doesn't already exist (safe to re-run).
         if (!$dbman->table_exists($table)) {
@@ -63,20 +76,20 @@ function xmldb_local_courseagent_upgrade($oldversion) {
 
         if (!$dbman->table_exists($table)) {
             // Re-define all fields (table doesn't exist yet).
-            $table->add_field('id',           XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-            $table->add_field('name',         XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('apikey',       XMLDB_TYPE_TEXT,    null,  null, XMLDB_NOTNULL, null, null);
-            $table->add_field('baseurl',      XMLDB_TYPE_CHAR,    '512', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('endpoint',     XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('models',       XMLDB_TYPE_TEXT,    null,  null, null,          null, null);
-            $table->add_field('isdefault',    XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('enabled',      XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '1');
-            $table->add_field('sortorder',    XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('timecreated',  XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
-            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('apikey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+            $table->add_field('baseurl', XMLDB_TYPE_CHAR, '512', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('endpoint', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('models', XMLDB_TYPE_TEXT, null, null, null, null, null);
+            $table->add_field('isdefault', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+            $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
             $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
             $table->add_index('isdefault', XMLDB_INDEX_NOTUNIQUE, ['isdefault']);
-            $table->add_index('enabled',   XMLDB_INDEX_NOTUNIQUE, ['enabled']);
+            $table->add_index('enabled', XMLDB_INDEX_NOTUNIQUE, ['enabled']);
             $dbman->create_table($table);
         }
 
@@ -89,20 +102,20 @@ function xmldb_local_courseagent_upgrade($oldversion) {
 
         if (!$dbman->table_exists($table)) {
             // Define all fields.
-            $table->add_field('id',           XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-            $table->add_field('name',         XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('apikey',       XMLDB_TYPE_TEXT,    null,  null, XMLDB_NOTNULL, null, null);
-            $table->add_field('baseurl',      XMLDB_TYPE_CHAR,    '512', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('endpoint',     XMLDB_TYPE_CHAR,    '255', null, XMLDB_NOTNULL, null, null);
-            $table->add_field('models',       XMLDB_TYPE_TEXT,    null,  null, null,          null, null);
-            $table->add_field('isdefault',    XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('enabled',      XMLDB_TYPE_INTEGER, '1',   null, XMLDB_NOTNULL, null, '1');
-            $table->add_field('sortorder',    XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, '0');
-            $table->add_field('timecreated',  XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
-            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10',  null, XMLDB_NOTNULL, null, null);
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('apikey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+            $table->add_field('baseurl', XMLDB_TYPE_CHAR, '512', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('endpoint', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('models', XMLDB_TYPE_TEXT, null, null, null, null, null);
+            $table->add_field('isdefault', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+            $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
             $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
             $table->add_index('isdefault', XMLDB_INDEX_NOTUNIQUE, ['isdefault']);
-            $table->add_index('enabled',   XMLDB_INDEX_NOTUNIQUE, ['enabled']);
+            $table->add_index('enabled', XMLDB_INDEX_NOTUNIQUE, ['enabled']);
             $dbman->create_table($table);
         }
 
