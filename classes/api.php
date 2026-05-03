@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle.
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * API service for generating and publishing AI-created Moodle courses.
@@ -26,7 +39,6 @@ require_once($CFG->dirroot . '/course/externallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class api {
-
     /**
      * Generate course outline using AI.
      *
@@ -39,18 +51,33 @@ class api {
      * @param string|null $model AI model name or null for first available
      * @return \stdClass Course data
      */
-    public function generate_course_outline($topic, $level, $numsections,
-                                            $includequiz = true, $includeassignment = false,
-                                            $providerid = null, $model = null,
-                                            $uploadedcontent = null, $customtitle = null,
-                                            $useemojis = false, $usesvg = false) {
+    public function generate_course_outline(
+        $topic,
+        $level,
+        $numsections,
+        $includequiz = true,
+        $includeassignment = false,
+        $providerid = null,
+        $model = null,
+        $uploadedcontent = null,
+        $customtitle = null,
+        $useemojis = false,
+        $usesvg = false
+    ) {
         global $USER;
 
         // Build prompt for AI.
-        $prompt = $this->build_generation_prompt($topic, $level, $numsections,
-                                                  $includequiz, $includeassignment,
-                                                  $uploadedcontent, $customtitle,
-                                                  $useemojis, $usesvg);
+        $prompt = $this->build_generation_prompt(
+            $topic,
+            $level,
+            $numsections,
+            $includequiz,
+            $includeassignment,
+            $uploadedcontent,
+            $customtitle,
+            $useemojis,
+            $usesvg
+        );
 
         $this->write_progress(1, 15, 'Building course outline...');
 
@@ -87,7 +114,7 @@ class api {
                 // Step 2: Escape literal bare CR/LF/TAB inside JSON string values.
                 // A bare \n or \r inside a JSON string value is invalid; it must be \\n.
                 // We use a callback so we only touch content inside double-quoted strings.
-                $response = preg_replace_callback('/"((?:[^"\\\\]|\\\\.)*)"/s', function($m) {
+                $response = preg_replace_callback('/"((?:[^"\\\\]|\\\\.)*)"/s', function ($m) {
                     $inner = $m[1];
                     // Replace unescaped literal newlines/tabs with their escaped forms.
                     $inner = preg_replace('/(?<!\\\\)\r/', '\\r', $inner);
@@ -131,7 +158,6 @@ class api {
                 $coursedata->_fallback_log        = $fallbacklog;
 
                 return $coursedata;
-
             } catch (\Exception $e) {
                 $lasterror = $e->getMessage();
                 $isratelimit = $this->is_rate_limit_error($lasterror);
@@ -171,7 +197,7 @@ class api {
         $seen          = [];
 
         // Helper to add without duplication.
-        $add = function($pid, $mod, $name) use (&$attempts, &$seen) {
+        $add = function ($pid, $mod, $name) use (&$attempts, &$seen) {
             $key = $pid . '|' . $mod;
             if (!isset($seen[$key])) {
                 $seen[$key]  = true;
@@ -250,9 +276,17 @@ class api {
     /**
      * Build prompt for course generation.
      */
-    private function build_generation_prompt($topic, $level, $numsections, $includequiz, $includeassignment,
-                                             $uploadedcontent = null, $customtitle = null,
-                                             $useemojis = false, $usesvg = false) {
+    private function build_generation_prompt(
+        $topic,
+        $level,
+        $numsections,
+        $includequiz,
+        $includeassignment,
+        $uploadedcontent = null,
+        $customtitle = null,
+        $useemojis = false,
+        $usesvg = false
+    ) {
         $maxsections = get_config('local_courseagent', 'max_sections') ?: 8;
         $maxquiz     = get_config('local_courseagent', 'max_quiz_questions') ?: 7;
 
@@ -407,7 +441,8 @@ class api {
         $numsections = count($coursedata->sections);
         $shortname   = substr(
             preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '_', strtolower($coursename))),
-            0, 50
+            0,
+            50
         ) . '_' . time();
 
         // Create course via core external API (recommended for local plugins).
@@ -434,11 +469,19 @@ class api {
             $sectionnum = $index + 1;
 
             // Update section name and summary directly in DB.
-            $DB->set_field('course_sections', 'name', $section->name,
-                           ['course' => $courseid, 'section' => $sectionnum]);
+            $DB->set_field(
+                'course_sections',
+                'name',
+                $section->name,
+                ['course' => $courseid, 'section' => $sectionnum]
+            );
             if (!empty($section->description)) {
-                $DB->set_field('course_sections', 'summary', $section->description,
-                               ['course' => $courseid, 'section' => $sectionnum]);
+                $DB->set_field(
+                    'course_sections',
+                    'summary',
+                    $section->description,
+                    ['course' => $courseid, 'section' => $sectionnum]
+                );
             }
 
             // Create lesson page.
@@ -762,7 +805,6 @@ class api {
             }
 
             return $questionid;
-
         } catch (\Exception $e) {
             // Log the error but don't abort the whole course creation.
             debugging('Course Agent: Failed to create question: ' . $e->getMessage(), DEBUG_DEVELOPER);

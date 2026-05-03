@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * @package   local_courseagent
@@ -32,9 +45,11 @@ $sessions = $DB->get_records('courseagent_sessions', ['userid' => $USER->id], 't
 
 if (empty($sessions)) {
     echo $OUTPUT->notification('You have not generated any courses yet.', 'info');
-    echo html_writer::link(new moodle_url('/local/courseagent/index.php'), 
-                          get_string('create_course', 'local_courseagent'),
-                          ['class' => 'btn btn-primary']);
+    echo html_writer::link(
+        new moodle_url('/local/courseagent/index.php'),
+        get_string('create_course', 'local_courseagent'),
+        ['class' => 'btn btn-primary']
+    );
 } else {
     // Display courses in a table.
     $table = new html_table();
@@ -43,7 +58,7 @@ if (empty($sessions)) {
         'Date Created',
         'Course Title',
         'Status',
-        'Actions'
+        'Actions',
     ];
     $table->data = [];
 
@@ -52,12 +67,15 @@ if (empty($sessions)) {
         $title = !empty($course_data->title) ? $course_data->title : 'Untitled Course';
         $date = userdate($session->timecreated);
         $status = ucfirst($session->status);
-        
+
         // Status badge styling.
-        $status_class = $session->status === 'published' ? 'success' : 
+        $status_class = $session->status === 'published' ? 'success' :
                        ($session->status === 'failed' ? 'danger' : 'secondary');
-        $status_badge = html_writer::tag('span', $status, 
-                                        ['class' => "badge badge-{$status_class}"]);
+        $status_badge = html_writer::tag(
+            'span',
+            $status,
+            ['class' => "badge badge-{$status_class}"]
+        );
 
         // Action links.
         $actions = '';
@@ -68,7 +86,7 @@ if (empty($sessions)) {
                 ['class' => 'btn btn-sm btn-outline-primary mr-2']
             );
         }
-        
+
         $table->data[] = [$date, $title, $status_badge, $actions];
     }
 

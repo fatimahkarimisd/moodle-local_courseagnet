@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle.
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * AJAX endpoint for local_courseagent actions.
@@ -76,8 +89,11 @@ try {
             // Generate course using AI.
             $api = new api();
             $coursedata = $api->generate_course_outline(
-                $topic, $level, $numsections,
-                $includequiz, $includeassignment,
+                $topic,
+                $level,
+                $numsections,
+                $includequiz,
+                $includeassignment,
                 $providerid > 0 ? $providerid : null,
                 $model ?: null,
                 $extractedcontent ?: null,
@@ -233,7 +249,6 @@ try {
         default:
             throw new Exception(get_string('error_invalid_action', 'local_courseagent'));
     }
-
 } catch (Exception $e) {
     http_response_code(400);
     echo json_encode([

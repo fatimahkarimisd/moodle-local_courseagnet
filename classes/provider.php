@@ -27,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider {
-
     /** @var string Encryption key for API keys */
     private static $cipher = 'aes-256-cbc';
 
@@ -320,11 +319,11 @@ class provider {
                 $requestmodel = null;
                 $data = [
                     'contents' => [
-                        ['parts' => [['text' => $testprompt]]]
+                        ['parts' => [['text' => $testprompt]]],
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 50
-                    ]
+                        'maxOutputTokens' => 50,
+                    ],
                 ];
             } else {
                 $requestmodel = $model ?: '';
@@ -333,7 +332,7 @@ class provider {
                 $data = [
                     'model' => $requestmodel,
                     'messages' => [
-                        ['role' => 'user', 'content' => $testprompt]
+                        ['role' => 'user', 'content' => $testprompt],
                     ],
                     'max_tokens' => 50,
                     'stream' => false,
@@ -487,7 +486,6 @@ class provider {
                     $result->message .= ' - ' . $result->response->error->message;
                 }
             }
-
         } catch (\Exception $e) {
             $result->message = 'Exception: ' . $e->getMessage();
             $result->debug->exception = $e->getMessage();
@@ -542,11 +540,11 @@ class provider {
                 $requestmodel = null;
                 $data = [
                     'contents' => [
-                        ['parts' => [['text' => $testprompt]]]
+                        ['parts' => [['text' => $testprompt]]],
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 50
-                    ]
+                        'maxOutputTokens' => 50,
+                    ],
                 ];
             } else {
                 $requestmodel = !empty($config->models_array) ? $config->models_array[0] : '';
@@ -555,7 +553,7 @@ class provider {
                 $data = [
                     'model' => $requestmodel,
                     'messages' => [
-                        ['role' => 'user', 'content' => $testprompt]
+                        ['role' => 'user', 'content' => $testprompt],
                     ],
                     'max_tokens' => 50,
                     'stream' => false,
@@ -712,7 +710,6 @@ class provider {
                     $result->message .= ' - ' . $result->response->error->message;
                 }
             }
-
         } catch (\Exception $e) {
             $result->message = 'Exception: ' . $e->getMessage();
             $result->debug->exception = $e->getMessage();
@@ -747,11 +744,11 @@ class provider {
             $url .= '?key=' . $apikey;
             $data = [
                 'contents' => [
-                    ['parts' => [['text' => $prompt]]]
+                    ['parts' => [['text' => $prompt]]],
                 ],
                 'generationConfig' => [
-                    'maxOutputTokens' => 8192
-                ]
+                    'maxOutputTokens' => 8192,
+                ],
             ];
 
             $moodlecurl = new \curl();
@@ -762,13 +759,12 @@ class provider {
             $response = $moodlecurl->post($url, json_encode($data));
             $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
             $error = $moodlecurl->error;
-
         } else {
             // OpenAI-compatible format.
             $data = [
                 'model' => $model,
                 'messages' => [
-                    ['role' => 'user', 'content' => $prompt]
+                    ['role' => 'user', 'content' => $prompt],
                 ],
                 'stream' => false,
             ];
