@@ -1,7 +1,22 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * Course preview page for local_courseagent.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -34,7 +49,7 @@ echo $OUTPUT->header();
 
 <div id="courseagent-preview-app">
 
-    <?php if (empty($previewdata)): ?>
+    <?php if (empty($previewdata)) : ?>
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
             <?php echo get_string('no_preview_data', 'local_courseagent'); ?>
@@ -42,7 +57,7 @@ echo $OUTPUT->header();
         </div>
     <?php endif; ?>
 
-    <?php if (!empty($previewdata)): ?>
+    <?php if (!empty($previewdata)) : ?>
         <script type="application/json" id="ca-preview-data"><?php echo json_encode($previewdata); ?></script>
 
         <!-- Top Bar -->

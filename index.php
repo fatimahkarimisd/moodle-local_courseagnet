@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * @package   local_courseagent
@@ -61,9 +74,9 @@ foreach ($providers as $p) {
 $jsconfig = [
     'maxSections'      => (int)  $maxsections,
     'maxQuizQuestions' => (int)  $maxquiz,
-    'enableAssignments'=> (bool) $enableassignments,
+    'enableAssignments' => (bool) $enableassignments,
     'providers'        => $providerconfig,
-    'defaultProviderId'=> $defaultprovider ? $defaultprovider->id : 0,
+    'defaultProviderId' => $defaultprovider ? $defaultprovider->id : 0,
     'wwwroot'          => $CFG->wwwroot,
     'sesskey'          => sesskey(),
 ];
@@ -182,7 +195,7 @@ echo $OUTPUT->header();
                                 </div>
                             </div>
 
-                            <?php if ($enableassignments): ?>
+                            <?php if ($enableassignments) : ?>
                             <!-- Include Assignments -->
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
@@ -249,7 +262,7 @@ echo $OUTPUT->header();
                             <div class="form-group col-md-6">
                                 <label for="ai-provider" class="font-weight-bold">AI Provider</label>
                                 <select id="ai-provider" class="custom-select">
-                                    <?php foreach ($providers as $p): ?>
+                                    <?php foreach ($providers as $p) : ?>
                                         <option value="<?php echo $p->id; ?>"
                                             <?php echo $p->isdefault ? 'selected' : ''; ?>>
                                             <?php echo format_string($p->name);
