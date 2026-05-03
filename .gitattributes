@@ -1,0 +1,17 @@
+# Enforce LF line endings for all text files.
+# This overrides core.autocrlf on Windows and ensures the Moodle Code Checker
+# never sees CRLF in the working directory.
+
+* text=auto eol=lf
+
+# Binary files — do not touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary

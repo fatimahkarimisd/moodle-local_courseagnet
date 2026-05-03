@@ -1,0 +1,19 @@
+# Development / AI-assisted working files — not shipped with the plugin.
+temp_for_ai/
+
+# Node / build tooling (if added later).
+node_modules/
+
+# OS files.
+Thumbs.db
+.DS_Store
+
+# Editor files.
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Moodle cache (should never be committed).
+moodle/.cache/

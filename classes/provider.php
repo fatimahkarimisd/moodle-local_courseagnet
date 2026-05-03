@@ -368,48 +368,18 @@ class provider {
                 'api_key_preview' => !empty($apikey) ? substr($apikey, 0, 4) . '...' . substr($apikey, -4) : 'N/A',
             ];
 
-            // Execute cURL request.
-            $ch = curl_init($testurl);
-            $actualheaders = ['Content-Type: application/json'];
+            // Execute request using Moodle's curl class (handles SSL, proxy, $CFG->cacert automatically).
+            $moodlecurl = new \curl();
+            $moodlecurl->setHeader(['Content-Type: application/json']);
             if (!$isgemini && !empty($apikey)) {
-                $actualheaders[] = 'Authorization: Bearer ' . $apikey;
+                $moodlecurl->setHeader(['Authorization: Bearer ' . $apikey]);
             }
+            $moodlecurl->setTimeout(30);
+            $moodlecurl->setConnectTimeout(10);
 
-            $curl_opts = [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => $actualheaders,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_SSL_VERIFYPEER => true,
-                CURLOPT_SSL_VERIFYHOST => 2,
-            ];
-
-            // On Windows, specify CA certificate bundle path for SSL verification.
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cacert = 'C:\xampp\php\extras\openssl\cacert.pem';
-                if (file_exists($cacert)) {
-                    $curl_opts[CURLOPT_CAINFO] = $cacert;
-                }
-            }
-
-            curl_setopt_array($ch, $curl_opts);
-
-            // Store actual headers and curl config for debugging.
-            $result->debug->request_construction['headers_sent'] = $actualheaders;
-            $result->debug->curl_config = [
-                'timeout' => 30,
-                'connecttimeout' => 10,
-                'ssl_verifypeer' => true,
-                'ssl_verifyhost' => 2,
-                'post' => true,
-            ];
-
-            $response = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $error = curl_error($ch);
-            curl_close($ch);
+            $response = $moodlecurl->post($testurl, json_encode($data));
+            $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
+            $error = $moodlecurl->error;
 
             $result->httpcode = $httpcode;
             $result->response = json_decode($response);
@@ -623,48 +593,18 @@ class provider {
                 'api_key_preview' => !empty($apikey) ? substr($apikey, 0, 4) . '...' . substr($apikey, -4) : 'N/A',
             ];
 
-            // Execute cURL request.
-            $ch = curl_init($testurl);
-            $actualheaders = ['Content-Type: application/json'];
+            // Execute request using Moodle's curl class (handles SSL, proxy, $CFG->cacert automatically).
+            $moodlecurl = new \curl();
+            $moodlecurl->setHeader(['Content-Type: application/json']);
             if (!$isgemini && !empty($apikey)) {
-                $actualheaders[] = 'Authorization: Bearer ' . $apikey;
+                $moodlecurl->setHeader(['Authorization: Bearer ' . $apikey]);
             }
+            $moodlecurl->setTimeout(30);
+            $moodlecurl->setConnectTimeout(10);
 
-            $curl_opts = [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => $actualheaders,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_SSL_VERIFYPEER => true,
-                CURLOPT_SSL_VERIFYHOST => 2,
-            ];
-
-            // On Windows, specify CA certificate bundle path for SSL verification.
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cacert = 'C:\xampp\php\extras\openssl\cacert.pem';
-                if (file_exists($cacert)) {
-                    $curl_opts[CURLOPT_CAINFO] = $cacert;
-                }
-            }
-
-            curl_setopt_array($ch, $curl_opts);
-
-            // Store actual headers and curl config for debugging.
-            $result->debug->request_construction['headers_sent'] = $actualheaders;
-            $result->debug->curl_config = [
-                'timeout' => 30,
-                'connecttimeout' => 10,
-                'ssl_verifypeer' => true,
-                'ssl_verifyhost' => 2,
-                'post' => true,
-            ];
-
-            $response = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $error = curl_error($ch);
-            curl_close($ch);
+            $response = $moodlecurl->post($testurl, json_encode($data));
+            $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
+            $error = $moodlecurl->error;
 
             $result->httpcode = $httpcode;
             $result->response = json_decode($response);
@@ -814,25 +754,14 @@ class provider {
                 ]
             ];
 
-            $ch = curl_init($url);
-            $gemini_opts = [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-                CURLOPT_TIMEOUT => 120,
-                CURLOPT_CONNECTTIMEOUT => 15,
-                CURLOPT_SSL_VERIFYPEER => true,
-                CURLOPT_SSL_VERIFYHOST => 2,
-            ];
-            // On Windows, specify CA certificate bundle path for SSL verification.
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cacert = 'C:\\xampp\\php\\extras\\openssl\\cacert.pem';
-                if (file_exists($cacert)) {
-                    $gemini_opts[CURLOPT_CAINFO] = $cacert;
-                }
-            }
-            curl_setopt_array($ch, $gemini_opts);
+            $moodlecurl = new \curl();
+            $moodlecurl->setHeader(['Content-Type: application/json']);
+            $moodlecurl->setTimeout(120);
+            $moodlecurl->setConnectTimeout(15);
+
+            $response = $moodlecurl->post($url, json_encode($data));
+            $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
+            $error = $moodlecurl->error;
 
         } else {
             // OpenAI-compatible format.
@@ -844,34 +773,16 @@ class provider {
                 'stream' => false,
             ];
 
-            $ch = curl_init($url);
-            $openai_opts = [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $apikey
-                ],
-                CURLOPT_TIMEOUT => 120,
-                CURLOPT_CONNECTTIMEOUT => 15,
-                CURLOPT_SSL_VERIFYPEER => true,
-                CURLOPT_SSL_VERIFYHOST => 2,
-            ];
-            // On Windows, specify CA certificate bundle path for SSL verification.
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $cacert = 'C:\\xampp\\php\\extras\\openssl\\cacert.pem';
-                if (file_exists($cacert)) {
-                    $openai_opts[CURLOPT_CAINFO] = $cacert;
-                }
-            }
-            curl_setopt_array($ch, $openai_opts);
-        }
+            $moodlecurl = new \curl();
+            $moodlecurl->setHeader(['Content-Type: application/json']);
+            $moodlecurl->setHeader(['Authorization: Bearer ' . $apikey]);
+            $moodlecurl->setTimeout(120);
+            $moodlecurl->setConnectTimeout(15);
 
-        $response = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
+            $response = $moodlecurl->post($url, json_encode($data));
+            $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
+            $error = $moodlecurl->error;
+        }
 
         if ($error) {
             throw new \Exception('API request failed: ' . $error);
