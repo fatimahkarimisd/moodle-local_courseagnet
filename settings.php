@@ -26,7 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     // Create settings category for our plugin.
-    $ADMIN->add('localplugins',
+    $ADMIN->add(
+        'localplugins',
         new admin_category('local_courseagent_folder', get_string('pluginname', 'local_courseagent'))
     );
 
@@ -51,7 +52,7 @@ if ($hassiteconfig) {
         get_string('default_provider', 'local_courseagent'),
         get_string('default_provider_desc', 'local_courseagent'),
         0,
-        function() {
+        function () {
             global $DB;
             $providers = $DB->get_records_menu('courseagent_providers', ['enabled' => 1], 'name', 'id,name');
             return [0 => get_string('provider_autoselect', 'local_courseagent')] + $providers;
@@ -92,7 +93,8 @@ if ($hassiteconfig) {
     ));
 
     // Add external page for provider management.
-    $ADMIN->add('local_courseagent_folder',
+    $ADMIN->add(
+        'local_courseagent_folder',
         new admin_externalpage(
             'local_courseagent_providers',
             get_string('provider_management', 'local_courseagent'),
