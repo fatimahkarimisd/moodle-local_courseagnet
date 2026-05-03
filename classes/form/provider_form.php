@@ -1,5 +1,18 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace local_courseagent\form;
 
@@ -15,10 +28,13 @@ require_once($CFG->libdir . '/formslib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider_form extends \moodleform {
-
+    /**
+     * Defines the provider configuration form fields.
+     */
     public function definition() {
         global $CFG;
 
+// phpcs:disable moodle.Files.LineLength.TooLong
         $mform = $this->_form;
         $provider = $this->_customdata['provider'] ?? null;
         $isediting = !empty($provider);
@@ -39,7 +55,10 @@ class provider_form extends \moodleform {
 
         // When editing, show note about leaving blank to keep existing key.
         if ($isediting && !empty($provider->apikey)) {
-            $mform->addElement('static', 'apikey_note', '',
+            $mform->addElement(
+                'static',
+                'apikey_note',
+                '',
                 get_string('provider_apikey_note', 'local_courseagent')
             );
         }
@@ -71,7 +90,10 @@ class provider_form extends \moodleform {
         $mform->addElement('hidden', 'models_json', '[]');
         $mform->setType('models_json', PARAM_RAW);
 
-        $mform->addElement('static', 'models_widget', get_string('provider_models', 'local_courseagent'),
+        $mform->addElement(
+            'static',
+            'models_widget',
+            get_string('provider_models', 'local_courseagent'),
             $this->render_models_widget($provider)
         );
         $mform->addHelpButton('models_widget', 'provider_models', 'local_courseagent');
@@ -96,7 +118,10 @@ class provider_form extends \moodleform {
         $mform->setType('id', PARAM_INT);
 
         // Test connection button - placed before the action buttons.
-        $mform->addElement('static', 'test_widget', '',
+        $mform->addElement(
+            'static',
+            'test_widget',
+            '',
             $this->render_test_button()
         );
 
@@ -119,13 +144,13 @@ class provider_form extends \moodleform {
             }
         }
 
-        $existingJson = htmlspecialchars(json_encode($existing), ENT_QUOTES, 'UTF-8');
+        $existingjson = htmlspecialchars(json_encode($existing), ENT_QUOTES, 'UTF-8');
         $placeholder = get_string('provider_model_placeholder', 'local_courseagent');
-        $addLabel = get_string('provider_model_add', 'local_courseagent');
-        $removeLabel = get_string('provider_model_remove', 'local_courseagent');
+        $addlabel = get_string('provider_model_add', 'local_courseagent');
+        $removelabel = get_string('provider_model_remove', 'local_courseagent');
 
         return <<<HTML
-<div id="courseagent-models-widget" class="courseagent-models-widget" data-existing="{$existingJson}">
+<div id="courseagent-models-widget" class="courseagent-models-widget" data-existing="{$existingjson}">
 
     <!-- Input row -->
     <div class="input-group mb-2" style="max-width:520px;">
@@ -136,7 +161,7 @@ class provider_form extends \moodleform {
                aria-label="Model ID input" />
         <div class="input-group-append">
             <button type="button" id="ca-model-add" class="btn btn-secondary">
-                <i class="fa fa-plus mr-1"></i>{$addLabel}
+                <i class="fa fa-plus mr-1"></i>{$addlabel}
             </button>
         </div>
     </div>
@@ -252,7 +277,7 @@ class provider_form extends \moodleform {
             var removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.className = 'btn btn-sm btn-outline-danger';
-            removeBtn.title = '{$removeLabel}';
+            removeBtn.title = '{$removelabel}';
             removeBtn.innerHTML = '<i class="fa fa-trash"></i>';
             removeBtn.addEventListener('click', function() {
                 models.splice(idx, 1);
@@ -349,13 +374,13 @@ HTML;
         $isediting = !empty($provider);
         $providerid = $isediting ? (int)$provider->id : 0;
 
-        $testLabel = get_string('provider_test_connection', 'local_courseagent');
-        $loadingLabel = get_string('provider_test_loading', 'local_courseagent');
-        $noApikeyLabel = get_string('provider_test_noapikey', 'local_courseagent');
-        $noBaseurlLabel = get_string('provider_test_nobaseurl', 'local_courseagent');
-        $showResponseLabel = get_string('provider_test_show_response', 'local_courseagent');
-        $hideResponseLabel = get_string('provider_test_hide_response', 'local_courseagent');
-        $responseBodyLabel = get_string('provider_test_response_body', 'local_courseagent');
+        $testlabel = get_string('provider_test_connection', 'local_courseagent');
+        $loadinglabel = get_string('provider_test_loading', 'local_courseagent');
+        $noapikeylabel = get_string('provider_test_noapikey', 'local_courseagent');
+        $nobaseurllabel = get_string('provider_test_nobaseurl', 'local_courseagent');
+        $showresponselabel = get_string('provider_test_show_response', 'local_courseagent');
+        $hideresponselabel = get_string('provider_test_hide_response', 'local_courseagent');
+        $responsebodylabel = get_string('provider_test_response_body', 'local_courseagent');
 
         // Inject JavaScript using Moodle's js_init_code() for plain JS execution.
         // NOTE: js_init_code() executes after DOM is ready, so no DOMContentLoaded needed.
@@ -411,7 +436,7 @@ btn.addEventListener('click', function(e) {
     // Validate required fields.
     if (!baseurlVal) {
         console.warn('[Course Agent] Validation failed: no baseurl');
-        status.textContent = '{$noBaseurlLabel}';
+        status.textContent = '{$nobaseurllabel}';
         status.className = 'ml-2 text-danger';
         return;
     }
@@ -423,14 +448,14 @@ btn.addEventListener('click', function(e) {
 
     if (!useStoredKey && !apikeyVal) {
         console.warn('[Course Agent] Validation failed: no apikey');
-        status.textContent = '{$noApikeyLabel}';
+        status.textContent = '{$noapikeylabel}';
         status.className = 'ml-2 text-danger';
         return;
     }
 
     // Show loading state.
     btn.disabled = true;
-    status.textContent = '{$loadingLabel}';
+    status.textContent = '{$loadinglabel}';
     status.className = 'ml-2 text-muted';
     result.style.display = 'none';
 
@@ -525,15 +550,15 @@ btn.addEventListener('click', function(e) {
             var responseJson = JSON.stringify(data.response, null, 2);
             responseBodyHtml = '<div style="margin-top:10px;">' +
                 '<span class="ca-response-toggle text-primary" data-expanded="false">' +
-                '<i class="fa fa-chevron-right mr-1"></i>{$showResponseLabel}</span>' +
+                '<i class="fa fa-chevron-right mr-1"></i>{$showresponselabel}</span>' +
                 '<div class="ca-response-body" style="display:none;">' +
-                '<strong>{$responseBodyLabel}:</strong><br>' + escapeHtml(responseJson) + '</div></div>';
+                '<strong>{$responsebodylabel}:</strong><br>' + escapeHtml(responseJson) + '</div></div>';
         }
 
         if (data.success) {
             console.log('[Course Agent] ✓ SUCCESS: Connection test passed!');
             result.className = 'mt-2 alert alert-success';
-            result.innerHTML = '<strong>✓ {$testLabel}:</strong> ' +
+            result.innerHTML = '<strong>✓ {$testlabel}:</strong> ' +
                 (data.message || 'Connection successful!') +
                 (data.httpcode ? ' (HTTP ' + data.httpcode + ')' : '') +
                 (data.ai_response ? '<br><em>AI replied: ' + escapeHtml(data.ai_response) + '</em>' : '') +
@@ -541,7 +566,7 @@ btn.addEventListener('click', function(e) {
         } else {
             console.error('[Course Agent] ✗ FAILED: Connection test failed!');
             result.className = 'mt-2 alert alert-danger';
-            result.innerHTML = '<strong>✗ {$testLabel}:</strong> ' +
+            result.innerHTML = '<strong>✗ {$testlabel}:</strong> ' +
                 (data.message || 'Connection failed') +
                 (data.httpcode ? ' (HTTP ' + data.httpcode + ')' : '') +
                 responseBodyHtml;
@@ -557,11 +582,11 @@ btn.addEventListener('click', function(e) {
                 if (body.style.display === 'none') {
                     body.style.display = 'block';
                     icon.className = 'fa fa-chevron-down mr-1';
-                    this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>{$hideResponseLabel}';
+                    this.innerHTML = '<i class="fa fa-chevron-down mr-1"></i>{$hideresponselabel}';
                 } else {
                     body.style.display = 'none';
                     icon.className = 'fa fa-chevron-right mr-1';
-                    this.innerHTML = '<i class="fa fa-chevron-right mr-1"></i>{$showResponseLabel}';
+                    this.innerHTML = '<i class="fa fa-chevron-right mr-1"></i>{$showresponselabel}';
                 }
             });
         });
@@ -594,7 +619,7 @@ JS;
         return <<<HTML
 <div class="courseagent-test-connection mb-3">
     <button type="button" id="ca-test-connection-btn" class="btn btn-outline-primary">
-        <i class="fa fa-plug mr-1"></i>{$testLabel}
+        <i class="fa fa-plug mr-1"></i>{$testlabel}
     </button>
     <span id="ca-test-status" class="ml-2 text-muted"></span>
     <div id="ca-test-result" class="mt-2" style="display:none;"></div>

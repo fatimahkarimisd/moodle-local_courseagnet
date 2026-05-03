@@ -1,5 +1,18 @@
 <?php
-// This file is part of Course Agent - AI Course Creator Plugin for Moodle
+// This file is part of Course Agent - AI Course Creator Plugin for Moodle.
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * File content extractor for Course Agent.
@@ -10,16 +23,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
 namespace local_courseagent;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Extracts readable plain text from uploaded documents.
  * Supported: TXT, MD, CSV, RTF, DOCX, PPTX, ODT, EPUB, PDF (basic).
  */
 class extractor {
-
     /**
      * Extract text from an uploaded file.
      *
@@ -68,7 +80,9 @@ class extractor {
                 break;
 
             default:
-                throw new \Exception('Unsupported file type ".' . $ext . '". Accepted: TXT, PDF, DOCX, PPTX, ODT, RTF, MD, CSV, EPUB.');
+                throw new \Exception(
+                    'Unsupported file type ".' . $ext . '". Accepted: TXT, PDF, DOCX, PPTX, ODT, RTF, MD, CSV, EPUB.'
+                );
         }
 
         // Normalise whitespace.
@@ -272,7 +286,7 @@ class extractor {
         // Handle escape sequences.
         $s = str_replace(['\\n', '\\r', '\\t', '\\\\', '\\(', '\\)'], ["\n", "\r", "\t", '\\', '(', ')'], $s);
         // Handle octal escapes \ddd.
-        $s = preg_replace_callback('/\\\\([0-7]{1,3})/', function($m) {
+        $s = preg_replace_callback('/\\\\([0-7]{1,3})/', function ($m) {
             return chr(octdec($m[1]));
         }, $s);
         return $s;

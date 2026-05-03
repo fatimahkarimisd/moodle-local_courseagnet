@@ -1,12 +1,31 @@
 <?php
-// This file is part of Course Agent - AI Course Creator Plugin for Moodle
+// This file is part of Course Agent - AI Course Creator Plugin for Moodle.
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * API service for generating and publishing AI-created Moodle courses.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Commenting.InlineComment.NotCapital
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
+// phpcs:disable moodle.Strings.ForbiddenStrings.Found
 namespace local_courseagent;
 
 defined('MOODLE_INTERNAL') || die();
@@ -24,7 +43,6 @@ require_once($CFG->dirroot . '/course/externallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class api {
-
     /**
      * Generate course outline using AI.
      *
@@ -37,18 +55,33 @@ class api {
      * @param string|null $model AI model name or null for first available
      * @return \stdClass Course data
      */
-    public function generate_course_outline($topic, $level, $numsections,
-                                            $includequiz = true, $includeassignment = false,
-                                            $providerid = null, $model = null,
-                                            $uploadedcontent = null, $customtitle = null,
-                                            $useemojis = false, $usesvg = false) {
+    public function generate_course_outline(
+        $topic,
+        $level,
+        $numsections,
+        $includequiz = true,
+        $includeassignment = false,
+        $providerid = null,
+        $model = null,
+        $uploadedcontent = null,
+        $customtitle = null,
+        $useemojis = false,
+        $usesvg = false
+    ) {
         global $USER;
 
         // Build prompt for AI.
-        $prompt = $this->build_generation_prompt($topic, $level, $numsections,
-                                                  $includequiz, $includeassignment,
-                                                  $uploadedcontent, $customtitle,
-                                                  $useemojis, $usesvg);
+        $prompt = $this->build_generation_prompt(
+            $topic,
+            $level,
+            $numsections,
+            $includequiz,
+            $includeassignment,
+            $uploadedcontent,
+            $customtitle,
+            $useemojis,
+            $usesvg
+        );
 
         $this->write_progress(1, 15, 'Building course outline...');
 
@@ -74,18 +107,18 @@ class api {
                 }
 
                 // DEBUG: log raw response (first 3000 chars) to server error log.
-                error_log('[CourseAgent] Raw AI response before sanitize (attempt ' . $attemptindex . '): ' . substr($rawresponse, 0, 3000));
+                debugging('[CourseAgent] Raw AI response before sanitize (attempt ' . $attemptindex . '): ' . substr($rawresponse, 0, 3000));
 
                 // Sanitize control characters that break json_decode().
                 // AI models (especially via OpenRouter) may inject raw control
-                // chars (0x00-0x1F except allowed whitespace) inside JSON
-                // string values, causing "Control character error".
+                // Chars (0x00-0x1F except allowed whitespace) inside JSON.
+                // String values can cause "Control character error".
                 // Step 1: Remove illegal control chars (0x00-0x08, 0x0B, 0x0C, 0x0E-0x1F).
                 $response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', $rawresponse);
                 // Step 2: Escape literal bare CR/LF/TAB inside JSON string values.
                 // A bare \n or \r inside a JSON string value is invalid; it must be \\n.
                 // We use a callback so we only touch content inside double-quoted strings.
-                $response = preg_replace_callback('/"((?:[^"\\\\]|\\\\.)*)"/s', function($m) {
+                $response = preg_replace_callback('/"((?:[^"\\\\]|\\\\.)*)"/s', function ($m) {
                     $inner = $m[1];
                     // Replace unescaped literal newlines/tabs with their escaped forms.
                     $inner = preg_replace('/(?<!\\\\)\r/', '\\r', $inner);
@@ -95,15 +128,15 @@ class api {
                 }, $response);
 
                 // DEBUG: log sanitized response (first 3000 chars) to server error log.
-                error_log('[CourseAgent] Sanitized AI response before json_decode (attempt ' . $attemptindex . '): ' . substr($response, 0, 3000));
+                debugging('[CourseAgent] Sanitized AI response before json_decode (attempt ' . $attemptindex . '): ' . substr($response, 0, 3000));
 
-                $course_data = json_decode($response);
+                $coursedata = json_decode($response);
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     // Last resort: try with deeper error recovery.
-                    $course_data = json_decode($response, false, 512, JSON_INVALID_UTF8_IGNORE);
+                    $coursedata = json_decode($response, false, 512, JSON_INVALID_UTF8_IGNORE);
                     if (json_last_error() !== JSON_ERROR_NONE) {
                         $debugpreview = substr($response, 0, 2000);
-                        error_log('[CourseAgent] JSON parse FAILED (attempt ' . $attemptindex . '). Error: ' . json_last_error_msg() . ' | Preview: ' . $debugpreview);
+                        debugging('[CourseAgent] JSON parse FAILED (attempt ' . $attemptindex . '). Error: ' . json_last_error_msg() . ' | Preview: ' . $debugpreview);
                         throw new \Exception(
                             'Failed to parse AI response as JSON: ' . json_last_error_msg() .
                             "\n\n--- RAW AI RESPONSE (first 2000 chars) ---\n" . $debugpreview .
@@ -111,10 +144,10 @@ class api {
                         );
                     }
                 }
-                if (empty($course_data->title) || empty($course_data->sections)) {
+                if (empty($coursedata->title) || empty($coursedata->sections)) {
                     throw new \Exception('AI returned incomplete course structure. Missing title or sections.');
                 }
-                $returnedsectioncount = count($course_data->sections);
+                $returnedsectioncount = count($coursedata->sections);
                 if ($returnedsectioncount != $numsections) {
                     throw new \Exception(
                         "AI returned {$returnedsectioncount} sections but {$numsections} were requested. " .
@@ -123,13 +156,12 @@ class api {
                 }
 
                 // Attach which provider/model was actually used + fallback log.
-                $course_data->_used_provider_id   = $attempt['providerid'];
-                $course_data->_used_provider_name = $attempt['providername'];
-                $course_data->_used_model         = $attempt['model'];
-                $course_data->_fallback_log        = $fallbacklog;
+                $coursedata->_used_provider_id   = $attempt['providerid'];
+                $coursedata->_used_provider_name = $attempt['providername'];
+                $coursedata->_used_model         = $attempt['model'];
+                $coursedata->_fallback_log        = $fallbacklog;
 
-                return $course_data;
-
+                return $coursedata;
             } catch (\Exception $e) {
                 $lasterror = $e->getMessage();
                 $isratelimit = $this->is_rate_limit_error($lasterror);
@@ -164,12 +196,12 @@ class api {
      * @return array Array of ['providerid', 'model', 'providername']
      */
     private function build_fallback_attempts(?int $providerid, ?string $model): array {
-        $allproviders  = provider::get_all(true); // enabled only, sorted
+        $allproviders  = provider::get_all(true); // Enabled only, sorted.
         $attempts      = [];
         $seen          = [];
 
         // Helper to add without duplication.
-        $add = function($pid, $mod, $name) use (&$attempts, &$seen) {
+        $add = function ($pid, $mod, $name) use (&$attempts, &$seen) {
             $key = $pid . '|' . $mod;
             if (!isset($seen[$key])) {
                 $seen[$key]  = true;
@@ -248,9 +280,17 @@ class api {
     /**
      * Build prompt for course generation.
      */
-    private function build_generation_prompt($topic, $level, $numsections, $includequiz, $includeassignment,
-                                             $uploadedcontent = null, $customtitle = null,
-                                             $useemojis = false, $usesvg = false) {
+    private function build_generation_prompt(
+        $topic,
+        $level,
+        $numsections,
+        $includequiz,
+        $includeassignment,
+        $uploadedcontent = null,
+        $customtitle = null,
+        $useemojis = false,
+        $usesvg = false
+    ) {
         $maxsections = get_config('local_courseagent', 'max_sections') ?: 8;
         $maxquiz     = get_config('local_courseagent', 'max_quiz_questions') ?: 7;
 
@@ -273,7 +313,7 @@ class api {
         // Topic line.
         $topicline = !empty($topic) ? "Topic: {$topic}" : 'Topic: (derive from the source document above)';
 
-        $quizcount    = min($maxquiz, 5); // default 5 questions per section
+        $quizcount    = min($maxquiz, 5); // Default 5 questions per section.
         $quizinstruct = $includequiz
             ? "Yes — generate exactly {$quizcount} MCQ questions per section"
             : 'No';
@@ -294,7 +334,9 @@ class api {
         $prompt .= "  3. Concrete real-world examples and use-cases for each concept.\n";
         $prompt .= "  4. A 'Key Takeaways' section with 5-7 bullet points.\n";
         $prompt .= "  5. A 'Further Reading / Practice' section with suggestions.\n";
-        $prompt .= "The content_html field MUST contain well-structured HTML with <h2>, <h3>, <p>, <ul>, <ol>, <strong>, <em>, <blockquote>, and <pre><code> tags as appropriate.\n";
+        $prompt .= "The content_html field MUST contain well-structured HTML with ";
+        $prompt .= "<h2>, <h3>, <p>, <ul>, <ol>, <strong>, <em>, <blockquote>, ";
+        $prompt .= "and <pre><code> tags as appropriate.\n";
         $prompt .= "Each lesson MUST be at minimum 800 words — comprehensive enough for a student to learn the topic without any other resources.\n\n";
 
         // Emoji styling instructions.
@@ -345,7 +387,10 @@ class api {
         $prompt .= '      "description": "2-3 sentence section overview",' . "\n";
         $prompt .= "      \"lesson\": {\n";
         $prompt .= '        "summary": "1-2 sentence lesson intro shown to students before they open the lesson",' . "\n";
-        $prompt .= '        "content_html": "<h2>Introduction</h2><p>...</p><h2>Core Concept 1</h2><p>...</p><h3>Example</h3><p>...</p><h2>Core Concept 2</h2><p>...</p><h2>Key Takeaways</h2><ul><li>...</li></ul><h2>Further Reading</h2><p>...</p>"' . "\n";
+        $prompt .= '        "content_html": "<h2>Introduction</h2><p>...</p>';
+        $prompt .= '<h2>Core Concept 1</h2><p>...</p><h3>Example</h3><p>...</p>';
+        $prompt .= '<h2>Core Concept 2</h2><p>...</p><h2>Key Takeaways</h2>';
+        $prompt .= '<ul><li>...</li></ul><h2>Further Reading</h2><p>...</p>"' . "\n";
         $prompt .= "      }";
 
         if ($includequiz) {
@@ -387,25 +432,26 @@ class api {
     /**
      * Publish course to Moodle.
      *
-     * @param \stdClass $course_data Course data
+     * @param \stdClass $coursedata Course data
      * @return int Moodle course ID
      */
-    public function publish_course($course_data) {
+    public function publish_course($coursedata) {
         global $DB, $USER;
 
         // Validate course data.
-        if (empty($course_data->title)) {
+        if (empty($coursedata->title)) {
             throw new \Exception('Course title is required');
         }
-        if (empty($course_data->sections) || !is_array($course_data->sections)) {
+        if (empty($coursedata->sections) || !is_array($coursedata->sections)) {
             throw new \Exception('Course must have sections');
         }
 
-        $coursename  = $course_data->title;
-        $numsections = count($course_data->sections);
+        $coursename  = $coursedata->title;
+        $numsections = count($coursedata->sections);
         $shortname   = substr(
             preg_replace('/[^a-zA-Z0-9_-]/', '', str_replace(' ', '_', strtolower($coursename))),
-            0, 50
+            0,
+            50
         ) . '_' . time();
 
         // Create course via core external API (recommended for local plugins).
@@ -415,7 +461,7 @@ class api {
             'fullname'      => $coursename,
             'shortname'     => $shortname,
             'categoryid'    => 1,
-            'summary'       => !empty($course_data->summary) ? $course_data->summary : '',
+            'summary'       => !empty($coursedata->summary) ? $coursedata->summary : '',
             'summaryformat' => FORMAT_HTML,
             'format'        => 'topics',
             'visible'       => 0,
@@ -428,15 +474,23 @@ class api {
         \course_create_sections_if_missing($course, range(0, $numsections));
 
         // Populate sections and add modules.
-        foreach ($course_data->sections as $index => $section) {
+        foreach ($coursedata->sections as $index => $section) {
             $sectionnum = $index + 1;
 
             // Update section name and summary directly in DB.
-            $DB->set_field('course_sections', 'name', $section->name,
-                           ['course' => $courseid, 'section' => $sectionnum]);
+            $DB->set_field(
+                'course_sections',
+                'name',
+                $section->name,
+                ['course' => $courseid, 'section' => $sectionnum]
+            );
             if (!empty($section->description)) {
-                $DB->set_field('course_sections', 'summary', $section->description,
-                               ['course' => $courseid, 'section' => $sectionnum]);
+                $DB->set_field(
+                    'course_sections',
+                    'summary',
+                    $section->description,
+                    ['course' => $courseid, 'section' => $sectionnum]
+                );
             }
 
             // Create lesson page.
@@ -468,7 +522,7 @@ class api {
         $session->userid       = $USER->id;
         $session->courseid     = $courseid;
         $session->status       = 'published';
-        $session->course_json  = json_encode($course_data);
+        $session->course_json  = json_encode($coursedata);
         $session->timecreated  = time();
         $session->timemodified = time();
         $DB->insert_record('courseagent_sessions', $session);
@@ -493,8 +547,8 @@ class api {
         $cm                      = new \stdClass();
         $cm->course              = $course->id;
         $cm->module              = $moduleid;
-        $cm->instance            = 0;   // updated by _add_instance()
-        $cm->section             = 0;   // moved by course_add_cm_to_section()
+        $cm->instance            = 0;   // Updated by _add_instance().
+        $cm->section             = 0;   // Moved by course_add_cm_to_section().
         $cm->visible             = 1;
         $cm->visibleold          = 1;
         $cm->visibleoncoursepage = 1;
@@ -535,7 +589,7 @@ class api {
         }
 
         $moduleinfo                   = new \stdClass();
-        $moduleinfo->coursemodule     = $cmid;   // required by page_add_instance()
+        $moduleinfo->coursemodule     = $cmid;   // Required by page_add_instance().
         $moduleinfo->course           = $course->id;
         $moduleinfo->name             = $section->name . ' - Lesson';
         $moduleinfo->intro            = !empty($section->lesson->summary) ? $section->lesson->summary : '';
@@ -626,7 +680,7 @@ class api {
             $slot = 1;
             foreach ($questions as $q) {
                 if (empty($q->question) || empty($q->options) || !is_array($q->options) || count($q->options) < 2) {
-                    continue; // skip malformed questions
+                    continue; // Skip malformed questions.
                 }
 
                 $questionid = $this->create_multichoice_question(
@@ -732,8 +786,8 @@ class api {
             // ── qtype_multichoice_options ────────────────────────────────────
             $mcoptions                      = new \stdClass();
             $mcoptions->questionid          = $questionid;
-            $mcoptions->layout              = 0; // vertical
-            $mcoptions->single              = 1; // single correct answer
+            $mcoptions->layout              = 0; // Vertical.
+            $mcoptions->single              = 1; // Single correct answer.
             $mcoptions->shuffleanswers      = 1;
             $mcoptions->correctfeedback     = 'Correct!';
             $mcoptions->correctfeedbackformat      = FORMAT_HTML;
@@ -760,7 +814,6 @@ class api {
             }
 
             return $questionid;
-
         } catch (\Exception $e) {
             // Log the error but don't abort the whole course creation.
             debugging('Course Agent: Failed to create question: ' . $e->getMessage(), DEBUG_DEVELOPER);
@@ -771,7 +824,7 @@ class api {
     /**
      * Create an assignment (mod_assign).
      */
-    private function create_assignment($course, $sectionnum, $assignment_data) {
+    private function create_assignment($course, $sectionnum, $assignmentdata) {
         global $CFG, $DB;
         require_once($CFG->dirroot . '/mod/assign/lib.php');
 
@@ -779,24 +832,24 @@ class api {
 
         // Debug log the incoming assignment data.
         debugging('Course Agent: Creating assignment in section ' . $sectionnum .
-                  ' with data: ' . json_encode($assignment_data), DEBUG_DEVELOPER);
+                  ' with data: ' . json_encode($assignmentdata), DEBUG_DEVELOPER);
 
-        $intro = !empty($assignment_data->description) ? $assignment_data->description : '';
-        if (!empty($assignment_data->instructions) && is_array($assignment_data->instructions)) {
+        $intro = !empty($assignmentdata->description) ? $assignmentdata->description : '';
+        if (!empty($assignmentdata->instructions) && is_array($assignmentdata->instructions)) {
             $intro .= '<h4>Instructions</h4><ul>';
-            foreach ($assignment_data->instructions as $inst) {
+            foreach ($assignmentdata->instructions as $inst) {
                 $intro .= '<li>' . $inst . '</li>';
             }
             $intro .= '</ul>';
         }
-        if (!empty($assignment_data->word_count)) {
-            $intro .= '<p><strong>Word count:</strong> ' . $assignment_data->word_count . ' words.</p>';
+        if (!empty($assignmentdata->word_count)) {
+            $intro .= '<p><strong>Word count:</strong> ' . $assignmentdata->word_count . ' words.</p>';
         }
 
         $moduleinfo                          = new \stdClass();
         $moduleinfo->coursemodule            = $cmid;
         $moduleinfo->course                  = $course->id;
-        $moduleinfo->name                    = !empty($assignment_data->title) ? $assignment_data->title : 'Assignment';
+        $moduleinfo->name                    = !empty($assignmentdata->title) ? $assignmentdata->title : 'Assignment';
         $moduleinfo->intro                   = $intro;
         $moduleinfo->introformat             = FORMAT_HTML;
         $moduleinfo->alwaysshowdescription   = 1;
@@ -838,14 +891,14 @@ class api {
             }
             debugging('Course Agent: Assignment created with instance ID ' . $instanceid . ' in section ' . $sectionnum, DEBUG_DEVELOPER);
 
-            // assign_add_instance does NOT update course_modules.instance
+            // assign_add_instance does NOT update course_modules.instance.
             // (unlike page_add_instance / quiz_after_add_or_update which do).
             // Without this, the CM has instance=0 and the assignment is invisible.
             $DB->set_field('course_modules', 'instance', $instanceid, ['id' => $cmid]);
 
             $this->place_cm_in_section($course, $cmid, $sectionnum);
         } catch (\Exception $e) {
-            error_log('Course Agent: Failed to create assignment in section ' . $sectionnum .
+            debugging('Course Agent: Failed to create assignment in section ' . $sectionnum .
                       ': ' . $e->getMessage());
             debugging('Course Agent: Failed to create assignment in section ' . $sectionnum .
                       ': ' . $e->getMessage() . '\n' . $e->getTraceAsString(), DEBUG_DEVELOPER);

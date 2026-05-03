@@ -16,8 +16,6 @@
 
 namespace local_courseagent;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * AI Provider management class.
  * Handles CRUD operations, encryption, and API calls for AI providers.
@@ -27,10 +25,11 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider {
-
     /** @var string Encryption key for API keys */
     private static $cipher = 'aes-256-cbc';
 
+// phpcs:disable moodle.Files.LineLength.TooLong
+// phpcs:disable moodle.Commenting.InlineComment.InvalidEndChar
     /**
      * Get encryption key.
      * Uses site identifier for key derivation.
@@ -298,7 +297,7 @@ class provider {
         $result->debug->extraction_attempts = [];
 
         // Start timing.
-        $start_time = microtime(true);
+        $starttime = microtime(true);
 
         try {
             // Normalize base URL.
@@ -320,11 +319,11 @@ class provider {
                 $requestmodel = null;
                 $data = [
                     'contents' => [
-                        ['parts' => [['text' => $testprompt]]]
+                        ['parts' => [['text' => $testprompt]]],
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 50
-                    ]
+                        'maxOutputTokens' => 50,
+                    ],
                 ];
             } else {
                 $requestmodel = $model ?: '';
@@ -333,7 +332,7 @@ class provider {
                 $data = [
                     'model' => $requestmodel,
                     'messages' => [
-                        ['role' => 'user', 'content' => $testprompt]
+                        ['role' => 'user', 'content' => $testprompt],
                     ],
                     'max_tokens' => 50,
                     'stream' => false,
@@ -393,7 +392,7 @@ class provider {
                 'raw_response_length' => strlen($response),
                 'json_decode_success' => json_last_error() === JSON_ERROR_NONE,
                 'json_decode_error' => json_last_error() !== JSON_ERROR_NONE ? json_last_error_msg() : null,
-                'response_structure' => self::analyzeResponseStructure($result->response),
+                'response_structure' => self::analyzeresponsestructure($result->response),
             ];
 
             if ($error) {
@@ -487,7 +486,6 @@ class provider {
                     $result->message .= ' - ' . $result->response->error->message;
                 }
             }
-
         } catch (\Exception $e) {
             $result->message = 'Exception: ' . $e->getMessage();
             $result->debug->exception = $e->getMessage();
@@ -495,7 +493,7 @@ class provider {
 
         // Add timing information.
         $result->debug->timing = [
-            'request_duration_ms' => round((microtime(true) - $start_time) * 1000, 2),
+            'request_duration_ms' => round((microtime(true) - $starttime) * 1000, 2),
         ];
 
         return $result;
@@ -523,7 +521,7 @@ class provider {
         $result->debug->extraction_attempts = [];
 
         // Start timing.
-        $start_time = microtime(true);
+        $starttime = microtime(true);
 
         try {
             // Build test URL - only add slash and endpoint if endpoint is not empty.
@@ -542,11 +540,11 @@ class provider {
                 $requestmodel = null;
                 $data = [
                     'contents' => [
-                        ['parts' => [['text' => $testprompt]]]
+                        ['parts' => [['text' => $testprompt]]],
                     ],
                     'generationConfig' => [
-                        'maxOutputTokens' => 50
-                    ]
+                        'maxOutputTokens' => 50,
+                    ],
                 ];
             } else {
                 $requestmodel = !empty($config->models_array) ? $config->models_array[0] : '';
@@ -555,7 +553,7 @@ class provider {
                 $data = [
                     'model' => $requestmodel,
                     'messages' => [
-                        ['role' => 'user', 'content' => $testprompt]
+                        ['role' => 'user', 'content' => $testprompt],
                     ],
                     'max_tokens' => 50,
                     'stream' => false,
@@ -618,7 +616,7 @@ class provider {
                 'raw_response_length' => strlen($response),
                 'json_decode_success' => json_last_error() === JSON_ERROR_NONE,
                 'json_decode_error' => json_last_error() !== JSON_ERROR_NONE ? json_last_error_msg() : null,
-                'response_structure' => self::analyzeResponseStructure($result->response),
+                'response_structure' => self::analyzeresponsestructure($result->response),
             ];
 
             if ($error) {
@@ -712,7 +710,6 @@ class provider {
                     $result->message .= ' - ' . $result->response->error->message;
                 }
             }
-
         } catch (\Exception $e) {
             $result->message = 'Exception: ' . $e->getMessage();
             $result->debug->exception = $e->getMessage();
@@ -747,11 +744,11 @@ class provider {
             $url .= '?key=' . $apikey;
             $data = [
                 'contents' => [
-                    ['parts' => [['text' => $prompt]]]
+                    ['parts' => [['text' => $prompt]]],
                 ],
                 'generationConfig' => [
-                    'maxOutputTokens' => 8192
-                ]
+                    'maxOutputTokens' => 8192,
+                ],
             ];
 
             $moodlecurl = new \curl();
@@ -762,13 +759,12 @@ class provider {
             $response = $moodlecurl->post($url, json_encode($data));
             $httpcode = (int) ($moodlecurl->get_info()['http_code'] ?? 0);
             $error = $moodlecurl->error;
-
         } else {
             // OpenAI-compatible format.
             $data = [
                 'model' => $model,
                 'messages' => [
-                    ['role' => 'user', 'content' => $prompt]
+                    ['role' => 'user', 'content' => $prompt],
                 ],
                 'stream' => false,
             ];
@@ -815,7 +811,7 @@ class provider {
      * @param mixed $response Parsed JSON response
      * @return array Structure analysis
      */
-    private static function analyzeResponseStructure($response): array {
+    private static function analyzeresponsestructure($response): array {
         if (!is_object($response) && !is_array($response)) {
             return ['type' => gettype($response), 'error' => 'Response is not an object/array'];
         }

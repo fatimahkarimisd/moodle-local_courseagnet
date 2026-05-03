@@ -1,11 +1,28 @@
 <?php
 // This file is part of Course Agent - AI Course Creator Plugin for Moodle
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * Main course creation page for local_courseagent.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+// phpcs:disable moodle.Commenting.MissingDocblock.File
+// phpcs:disable moodle.Files.LineLength.TooLong
 
 require_once(__DIR__ . '/../../config.php');
 
@@ -61,9 +78,9 @@ foreach ($providers as $p) {
 $jsconfig = [
     'maxSections'      => (int)  $maxsections,
     'maxQuizQuestions' => (int)  $maxquiz,
-    'enableAssignments'=> (bool) $enableassignments,
+    'enableAssignments' => (bool) $enableassignments,
     'providers'        => $providerconfig,
-    'defaultProviderId'=> $defaultprovider ? $defaultprovider->id : 0,
+    'defaultProviderId' => $defaultprovider ? $defaultprovider->id : 0,
     'wwwroot'          => $CFG->wwwroot,
     'sesskey'          => sesskey(),
 ];
@@ -167,7 +184,8 @@ echo $OUTPUT->header();
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-primary rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-primary rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-question-circle"></i>
                                         </span>
                                     </div>
@@ -182,12 +200,13 @@ echo $OUTPUT->header();
                                 </div>
                             </div>
 
-                            <?php if ($enableassignments): ?>
+                            <?php if ($enableassignments) { ?>
                             <!-- Include Assignments -->
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-pencil-square-o"></i>
                                         </span>
                                     </div>
@@ -201,13 +220,14 @@ echo $OUTPUT->header();
                                     <label class="custom-control-label" for="include-assignment"></label>
                                 </div>
                             </div>
-                            <?php endif; ?>
+                            <?php } ?>
 
                             <!-- Use Emojis -->
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-smile-o"></i>
                                         </span>
                                     </div>
@@ -226,7 +246,8 @@ echo $OUTPUT->header();
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-info rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-picture-o"></i>
                                         </span>
                                     </div>
@@ -249,13 +270,13 @@ echo $OUTPUT->header();
                             <div class="form-group col-md-6">
                                 <label for="ai-provider" class="font-weight-bold">AI Provider</label>
                                 <select id="ai-provider" class="custom-select">
-                                    <?php foreach ($providers as $p): ?>
+                                    <?php foreach ($providers as $p) { ?>
                                         <option value="<?php echo $p->id; ?>"
                                             <?php echo $p->isdefault ? 'selected' : ''; ?>>
                                             <?php echo format_string($p->name);
                                                   echo $p->isdefault ? ' (' . get_string('provider_default', 'local_courseagent') . ')' : ''; ?>
                                         </option>
-                                    <?php endforeach; ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                             <!-- AI Model -->
@@ -292,7 +313,8 @@ echo $OUTPUT->header();
                     </p>
                     <div class="list-group list-group-flush">
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-list-ol text-primary"></i>
                             </span>
                             <div>
@@ -301,7 +323,8 @@ echo $OUTPUT->header();
                             </div>
                         </div>
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-file-text-o text-primary"></i>
                             </span>
                             <div>
@@ -310,7 +333,8 @@ echo $OUTPUT->header();
                             </div>
                         </div>
                         <div class="list-group-item px-0 d-flex align-items-start">
-                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                            <span class="badge badge-light rounded-circle p-2 mr-3 border d-inline-flex align-items-center justify-content-center"
+                                  style="width:2.5rem;height:2.5rem;">
                                 <i class="fa fa-check-circle text-primary"></i>
                             </span>
                             <div>
