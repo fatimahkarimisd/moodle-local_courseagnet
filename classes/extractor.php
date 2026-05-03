@@ -1,5 +1,5 @@
 <?php
-// This file is part of Course Agent - AI Course Creator Plugin for Moodle
+// This file is part of Course Agent - AI Course Creator Plugin for Moodle.
 
 /**
  * File content extractor for Course Agent.
@@ -11,8 +11,6 @@
  */
 
 namespace local_courseagent;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Extracts readable plain text from uploaded documents.
@@ -68,7 +66,9 @@ class extractor {
                 break;
 
             default:
-                throw new \Exception('Unsupported file type ".' . $ext . '". Accepted: TXT, PDF, DOCX, PPTX, ODT, RTF, MD, CSV, EPUB.');
+                throw new \Exception(
+                    'Unsupported file type ".' . $ext . '". Accepted: TXT, PDF, DOCX, PPTX, ODT, RTF, MD, CSV, EPUB.'
+                );
         }
 
         // Normalise whitespace.
