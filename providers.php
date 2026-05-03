@@ -134,8 +134,8 @@ $form        = null;  // Initialize to avoid undefined variable warning.
 // Check if form was submitted - Moodle forms send a _qf__<formclass> marker in POST.
 // This must be detected BEFORE we decide whether to create the form object,
 // because get_data() requires the form object to exist.
-$qf_marker = '_qf__local_courseagent_form_provider_form';
-$form_submitted = optional_param($qf_marker, null, PARAM_RAW) !== null;
+$qfmarker = '_qf__local_courseagent_form_provider_form';
+$formsubmitted = optional_param($qfmarker, null, PARAM_RAW) !== null;
 
 if ($isediting) {
     $rec = provider::get($editid);
@@ -152,7 +152,7 @@ if ($isediting) {
             'models_json' => $rec->models,
         ]);
     }
-} else if ($isadding || $form_submitted) {
+} else if ($isadding || $formsubmitted) {
     // Create form for both "add" display AND form submission processing.
     $form = new provider_form(new moodle_url('/local/courseagent/providers.php'), ['provider' => null]);
 }
@@ -167,8 +167,8 @@ if ($form) {
         // echo $OUTPUT->header(); echo '<pre>'; print_r($data); echo '</pre>'; echo $OUTPUT->footer(); exit;
 
         // Parse models from the hidden JSON field (populated by JS widget).
-        $modelsRaw = $data->models_json ?? '[]';
-        $models    = json_decode($modelsRaw, true);
+        $modelsraw = $data->models_json ?? '[]';
+        $models    = json_decode($modelsraw, true);
         if (!is_array($models)) {
             $models = [];
         }

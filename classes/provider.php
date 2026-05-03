@@ -297,7 +297,7 @@ class provider {
         $result->debug->extraction_attempts = [];
 
         // Start timing.
-        $start_time = microtime(true);
+        $starttime = microtime(true);
 
         try {
             // Normalize base URL.
@@ -392,7 +392,7 @@ class provider {
                 'raw_response_length' => strlen($response),
                 'json_decode_success' => json_last_error() === JSON_ERROR_NONE,
                 'json_decode_error' => json_last_error() !== JSON_ERROR_NONE ? json_last_error_msg() : null,
-                'response_structure' => self::analyzeResponseStructure($result->response),
+                'response_structure' => self::analyzeresponsestructure($result->response),
             ];
 
             if ($error) {
@@ -493,7 +493,7 @@ class provider {
 
         // Add timing information.
         $result->debug->timing = [
-            'request_duration_ms' => round((microtime(true) - $start_time) * 1000, 2),
+            'request_duration_ms' => round((microtime(true) - $starttime) * 1000, 2),
         ];
 
         return $result;
@@ -521,7 +521,7 @@ class provider {
         $result->debug->extraction_attempts = [];
 
         // Start timing.
-        $start_time = microtime(true);
+        $starttime = microtime(true);
 
         try {
             // Build test URL - only add slash and endpoint if endpoint is not empty.
@@ -616,7 +616,7 @@ class provider {
                 'raw_response_length' => strlen($response),
                 'json_decode_success' => json_last_error() === JSON_ERROR_NONE,
                 'json_decode_error' => json_last_error() !== JSON_ERROR_NONE ? json_last_error_msg() : null,
-                'response_structure' => self::analyzeResponseStructure($result->response),
+                'response_structure' => self::analyzeresponsestructure($result->response),
             ];
 
             if ($error) {
@@ -811,7 +811,7 @@ class provider {
      * @param mixed $response Parsed JSON response
      * @return array Structure analysis
      */
-    private static function analyzeResponseStructure($response): array {
+    private static function analyzeresponsestructure($response): array {
         if (!is_object($response) && !is_array($response)) {
             return ['type' => gettype($response), 'error' => 'Response is not an object/array'];
         }

@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * User course dashboard for local_courseagent.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -63,8 +65,8 @@ if (empty($sessions)) {
     $table->data = [];
 
     foreach ($sessions as $session) {
-        $course_data = json_decode($session->course_json);
-        $title = !empty($course_data->title) ? $course_data->title : 'Untitled Course';
+        $coursedata = json_decode($session->course_json);
+        $title = !empty($coursedata->title) ? $coursedata->title : 'Untitled Course';
         $date = userdate($session->timecreated);
         $status = ucfirst($session->status);
 

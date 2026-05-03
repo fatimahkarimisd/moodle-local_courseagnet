@@ -330,7 +330,9 @@ class api {
         $prompt .= "  3. Concrete real-world examples and use-cases for each concept.\n";
         $prompt .= "  4. A 'Key Takeaways' section with 5-7 bullet points.\n";
         $prompt .= "  5. A 'Further Reading / Practice' section with suggestions.\n";
-        $prompt .= "The content_html field MUST contain well-structured HTML with <h2>, <h3>, <p>, <ul>, <ol>, <strong>, <em>, <blockquote>, and <pre><code> tags as appropriate.\n";
+        $prompt .= "The content_html field MUST contain well-structured HTML with ";
+        $prompt .= "<h2>, <h3>, <p>, <ul>, <ol>, <strong>, <em>, <blockquote>, ";
+        $prompt .= "and <pre><code> tags as appropriate.\n";
         $prompt .= "Each lesson MUST be at minimum 800 words — comprehensive enough for a student to learn the topic without any other resources.\n\n";
 
         // Emoji styling instructions.
@@ -381,7 +383,10 @@ class api {
         $prompt .= '      "description": "2-3 sentence section overview",' . "\n";
         $prompt .= "      \"lesson\": {\n";
         $prompt .= '        "summary": "1-2 sentence lesson intro shown to students before they open the lesson",' . "\n";
-        $prompt .= '        "content_html": "<h2>Introduction</h2><p>...</p><h2>Core Concept 1</h2><p>...</p><h3>Example</h3><p>...</p><h2>Core Concept 2</h2><p>...</p><h2>Key Takeaways</h2><ul><li>...</li></ul><h2>Further Reading</h2><p>...</p>"' . "\n";
+        $prompt .= '        "content_html": "<h2>Introduction</h2><p>...</p>';
+        $prompt .= '<h2>Core Concept 1</h2><p>...</p><h3>Example</h3><p>...</p>';
+        $prompt .= '<h2>Core Concept 2</h2><p>...</p><h2>Key Takeaways</h2>';
+        $prompt .= '<ul><li>...</li></ul><h2>Further Reading</h2><p>...</p>"' . "\n";
         $prompt .= "      }";
 
         if ($includequiz) {
