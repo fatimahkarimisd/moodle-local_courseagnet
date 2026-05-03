@@ -46,9 +46,7 @@ $id      = optional_param('id', 0, PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 $editid  = optional_param('edit', 0, PARAM_INT);
 
-// ------------------------------------------------------------------ //
-// Action: Delete                                                       //
-// ------------------------------------------------------------------ //
+// Action: Delete.
 if ($action === 'delete' && $id && confirm_sesskey()) {
     $rec = provider::get($id);
     if ($rec) {
@@ -78,9 +76,7 @@ if ($action === 'delete' && $id && confirm_sesskey()) {
     }
 }
 
-// ------------------------------------------------------------------ //
-// Action: Set Default                                                  //
-// ------------------------------------------------------------------ //
+// Action: Set default.
 if ($action === 'setdefault' && $id && confirm_sesskey()) {
     provider::set_default($id);
     redirect(
@@ -91,9 +87,7 @@ if ($action === 'setdefault' && $id && confirm_sesskey()) {
     );
 }
 
-// ------------------------------------------------------------------ //
-// Action: Toggle Enabled                                               //
-// ------------------------------------------------------------------ //
+// Action: Toggle enabled.
 if ($action === 'toggle' && $id && confirm_sesskey()) {
     $rec = provider::get($id);
     if ($rec) {
@@ -102,9 +96,7 @@ if ($action === 'toggle' && $id && confirm_sesskey()) {
     }
 }
 
-// ------------------------------------------------------------------ //
-// Action: Test Connection (AJAX)                                       //
-// ------------------------------------------------------------------ //
+// Action: Test connection (AJAX).
 if ($action === 'test' && $id) {
     header('Content-Type: application/json');
     try {
@@ -124,9 +116,7 @@ if ($action === 'test' && $id) {
     exit;
 }
 
-// ------------------------------------------------------------------ //
-// Add / Edit form                                                      //
-// ------------------------------------------------------------------ //
+// Add or edit form.
 $isediting   = ($editid > 0);
 $isadding    = ($action === 'add');
 $form        = null;  // Initialize to avoid undefined variable warning.
@@ -163,7 +153,7 @@ if ($form) {
     }
 
     if ($data = $form->get_data()) {
-        // Debug: Uncomment to see what data is received
+        // Debug: Uncomment to see what data is received.
         // echo $OUTPUT->header(); echo '<pre>'; print_r($data); echo '</pre>'; echo $OUTPUT->footer(); exit;
 
         // Parse models from the hidden JSON field (populated by JS widget).
@@ -172,11 +162,11 @@ if ($form) {
         if (!is_array($models)) {
             $models = [];
         }
-        // Sanitise: trim & remove blanks.
+        // Sanitise: trim and remove blanks.
         $models = array_values(array_filter(array_map('trim', $models)));
         $data->models = $models;
 
-        // If editing and API key left blank, keep the existing key.
+        // If editing and API key is blank, keep the existing key.
         if (!empty($data->id) && empty(trim($data->apikey ?? ''))) {
             $existing         = provider::get($data->id);
             $data->apikey     = provider::decrypt_apikey($existing->apikey);
@@ -193,7 +183,7 @@ if ($form) {
         } else {
             try {
                 $newid = provider::create($data);
-                // Debug: uncomment the next line to see if provider was created
+                // Debug: Uncomment the next line to see whether provider was created.
                 // redirect(new moodle_url('/local/courseagent/providers.php'), "Created provider ID: " . $newid, null, \core\output\notification::NOTIFY_SUCCESS);
                 redirect(
                     new moodle_url('/local/courseagent/providers.php'),
@@ -202,7 +192,7 @@ if ($form) {
                     \core\output\notification::NOTIFY_SUCCESS
                 );
             } catch (\Exception $e) {
-                // Show error if create failed
+                // Show error if create failed.
                 echo $OUTPUT->header();
                 echo $OUTPUT->notification('Error creating provider: ' . $e->getMessage(), 'notifyproblem');
                 echo html_writer::div(
