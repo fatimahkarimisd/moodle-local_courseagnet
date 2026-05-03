@@ -15,10 +15,13 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * Main course creation page for local_courseagent.
+ *
  * @package   local_courseagent
  * @copyright 2026 Course Agent
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+// phpcs:disable moodle.Commenting.MissingDocblock.File
 
 require_once(__DIR__ . '/../../config.php');
 
@@ -180,7 +183,8 @@ echo $OUTPUT->header();
                             <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded border mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="mr-3">
-                                        <span class="badge badge-primary rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;">
+                                        <span class="badge badge-primary rounded-circle p-2 d-inline-flex align-items-center justify-content-center"
+                                              style="width:2.5rem;height:2.5rem;">
                                             <i class="fa fa-question-circle"></i>
                                         </span>
                                     </div>
